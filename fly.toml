@@ -1,4 +1,9 @@
-app = 'chatbook-2zzzzg'
+# fly.toml app configuration file generated for chatbook-ltu2-q on 2026-09-29T13:45:08Z
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = 'chatbook-ltu2-q'
 primary_region = 'ams'
 
 [build]
@@ -11,10 +16,14 @@ primary_region = 'ams'
 [processes]
   app = 'node server.js'
 
+[[mounts]]
+  source = 'chatbook_data'
+  destination = '/data'
+
 [http_service]
-  internal_port = 3000
+  internal_port = 8080
   force_https = true
-  auto_stop_machines = true
+  auto_stop_machines = 'stop'
   auto_start_machines = true
   min_machines_running = 0
   processes = ['app']
@@ -26,6 +35,8 @@ primary_region = 'ams'
     method = 'GET'
     path = '/healthz'
 
-[[mounts]]
-  source = 'chatbook_data'
-  destination = '/data'
+[[vm]]
+  memory = '1gb'
+  cpu_kind = 'shared'
+  cpus = 1
+  memory_mb = 256
