@@ -1,7 +1,24 @@
 const Database = require('better-sqlite3');
 const path = require('path');
+const fs = require('fs');
 
-const db = new Database(path.join(__dirname, 'chatbook.db'));
+// En producción (Fly.io) usamos /data (volumen persistente)
+// En desarrollo usamos la carpeta local
+const isProd = process.env.NODE_ENV === 'production';
+const dbDir = isProd ? '/data' : __dirname;
+const dbPath = path.join(dbDir, 'chatbook.db');
+
+// Asegurar que el directorio exista (por si acaso)
+if (!fs.existsSync(dbDir)) {
+  fs.mkdirSync(dbDir, { recursive: true });
+}
+
+console.log(`📁 Base de datos en: ${dbPath}`);
+
+const db = new Database(dbPath);
+
+// Habilitar WAL para mejor rendimiento y concurrencia
+db.pragma('journal_mode = WAL');
 
 db.exec(`
   CREATE TABLE IF NOT EXISTS users (
