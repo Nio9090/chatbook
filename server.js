@@ -17,6 +17,12 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// ✅ RUTA DE HEALTH CHECK PARA FLY.IO
+// Debe devolver 200 OK sin requerir autenticación
+app.get('/healthz', (req, res) => {
+  res.status(200).send('OK');
+});
+
 app.use('/api/auth', authRoutes);
 
 // Lista de todos los usuarios (excepto yo)
@@ -44,20 +50,16 @@ io.use((socket, next) => {
   }
 });
 
-// userId -> número de sockets activos (puede estar abierto en varios dispositivos)
 const onlineUsers = new Map();
 
 io.on('connection', (socket) => {
   const myId = socket.user.id;
 
-  // Cada usuario tiene su propia "sala" para recibir mensajes
   socket.join(`user:${myId}`);
 
-  // Marcar en línea
   onlineUsers.set(myId, (onlineUsers.get(myId) || 0) + 1);
   io.emit('online users', Array.from(onlineUsers.keys()));
 
-  // Cargar conversación con otro usuario
   socket.on('load conversation', (otherId) => {
     const other = Number(otherId);
     if (!Number.isInteger(other)) return;
@@ -74,7 +76,6 @@ io.on('connection', (socket) => {
     socket.emit('conversation history', { withUser: other, messages });
   });
 
-  // Enviar mensaje privado
   socket.on('private message', ({ to, content }) => {
     const recipientId = Number(to);
     if (!Number.isInteger(recipientId)) return;
@@ -98,12 +99,10 @@ io.on('connection', (socket) => {
       created_at: new Date().toISOString()
     };
 
-    // Enviar al receptor y al emisor (para reflejarlo en su propia ventana)
     io.to(`user:${recipientId}`).emit('private message', msg);
     io.to(`user:${myId}`).emit('private message', msg);
   });
 
-  // Indicador de "está escribiendo" solo al destinatario
   socket.on('typing', ({ to, isTyping }) => {
     const recipientId = Number(to);
     if (!Number.isInteger(recipientId)) return;
@@ -122,7 +121,8 @@ io.on('connection', (socket) => {
   });
 });
 
+// ✅ ESCUCHAR EN 0.0.0.0 PARA FLY.IO
 const PORT = process.env.PORT || 3000;
-server.listen(PORT, () => {
-  console.log(`Servidor en http://localhost:${PORT}`);
+server.listen(PORT, '0.0.0.0', () => {
+  console.log(`Servidor escuchando en 0.0.0.0:${PORT}`);
 });
