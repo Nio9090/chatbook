@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>ChatBook — Chats</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body class="chat-body">
+  <div class="chat-app" id="chat-app">
+
+    <!-- Barra lateral con lista de usuarios -->
+    <aside class="sidebar">
+      <header class="sidebar-header">
+        <h2>Chats</h2>
+        <span id="current-user" class="current-user"></span>
+      </header>
+
+      <div class="sidebar-search">
+        <input id="user-search" type="text" placeholder="Buscar usuario..." autocomplete="off">
+      </div>
+
+      <ul id="user-list" class="user-list"></ul>
+
+      <footer class="sidebar-footer">
+        <button id="logout-btn" class="btn-secondary" type="button">Cerrar sesión</button>
+      </footer>
+    </aside>
+
+    <!-- Panel de chat -->
+    <main class="chat-panel">
+      <header class="chat-header">
+        <button id="back-btn" class="btn-icon" type="button" aria-label="Volver">←</button>
+        <div class="chat-brand">
+          <h1 id="chat-title">Selecciona un chat</h1>
+          <span id="chat-status"></span>
+        </div>
+      </header>
+
+      <div class="chat-main">
+        <div id="empty-state" class="empty-state">
+          <div class="empty-icon">💬</div>
+          <p>Elige un usuario de la lista para empezar a chatear</p>
+        </div>
+        <div id="messages" class="messages"></div>
+        <div id="typing-indicator" class="typing-indicator"></div>
+      </div>
+
+      <form id="message-form" class="message-form">
+        <input id="message-input" type="text" placeholder="Escribe un mensaje..."
+               autocomplete="off" maxlength="500" required disabled>
+        <button type="submit" class="btn-primary" disabled>Enviar</button>
+      </form>
+    </main>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/js/chat.js"></script>
+</body>
+</html>

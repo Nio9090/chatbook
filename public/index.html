@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ChatBook — Iniciar sesión</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body class="auth-body">
+  <div class="auth-container">
+    <div class="auth-brand">
+      <h1>ChatBook</h1>
+      <p>Conecta con tus amigos en tiempo real.</p>
+    </div>
+
+    <div class="auth-card">
+      <div class="tabs">
+        <button class="tab active" data-tab="login" type="button">Iniciar sesión</button>
+        <button class="tab" data-tab="register" type="button">Registrarse</button>
+      </div>
+
+      <form id="login-form" class="form" novalidate>
+        <input type="email" name="email" placeholder="Correo electrónico"
+               autocomplete="email" required>
+        <input type="password" name="password" placeholder="Contraseña"
+               autocomplete="current-password" required>
+        <button type="submit" class="btn-primary">Entrar</button>
+      </form>
+
+      <form id="register-form" class="form hidden" novalidate>
+        <input type="text" name="username" placeholder="Nombre de usuario"
+               autocomplete="username" required>
+        <input type="email" name="email" placeholder="Correo electrónico"
+               autocomplete="email" required>
+        <input type="password" name="password" placeholder="Contraseña (mín. 8 caracteres)"
+               autocomplete="new-password" required>
+        <button type="submit" class="btn-primary">Crear cuenta</button>
+      </form>
+
+      <p id="auth-message" class="auth-message" role="alert"></p>
+    </div>
+  </div>
+
+  <script src="/js/auth.js"></script>
+</body>
+</html>
